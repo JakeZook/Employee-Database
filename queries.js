@@ -2,6 +2,25 @@ const inquirer = require('inquirer');
 const db = require('mysql2');
 const openingQuestion = require('./index');
 
+class Query {
+    constructor(selection)
+    {
+        this.selection = selection;
+    }
+
+    view() {
+        console.log(`Viewing ${this.selection}`);
+    }
+
+    add() {
+        console.log(`Adding to ${this.selection}`);
+    }
+
+    update() {
+        console.log(`Updating employee role`);
+    }
+}
+
 const viewDepartments = () => {
     console.log("VD");
 }
@@ -32,5 +51,5 @@ const updateRole = () => {
 
 module.exports = {
     viewDepartments, viewRoles, viewEmployees,
-    addDepartment, addRole, addEmployee, updateRole
+    addDepartment, addRole, addEmployee, updateRole, Query
 };

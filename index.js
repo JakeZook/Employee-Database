@@ -6,7 +6,7 @@ const openingQuestion = [
     type: 'list',
     message: 'What would you like to do?',
     name: 'openingChoice',
-    choices: ["View all departments", "view all roles", "View all employees", "Add a department", 
+    choices: ["View all departments", "View all roles", "View all employees", "Add a department", 
     "Add a role", "Add an employee", "Update an employee role"]
     }
 ]
@@ -27,30 +27,58 @@ const askOpeningQuestion = () => {
     inquirer.prompt(openingQuestion).then((res) => {
         switch (res.openingChoice)
         {
-            case "View all departments": queries.viewDepartments();
-            break;
+            case "View all departments":
+            {
+                const query = new queries.Query("Departments");
+                query.view();
+                break;
+            }
 
-            case "View all roles": queries.viewRoles();
-            break;
+            case "View all roles": 
+            {
+                const query = new queries.Query("Roles");
+                query.view();
+                break;
+            }
 
-            case "View all employees": queries.viewEmployees();
-            break;
+            case "View all employees": 
+            {
+                const query = new queries.Query("Employees");
+                query.view();
+                break;
+            }
 
-            case "Add a department": queries.addDepartment();
-            break;
+            case "Add a department": 
+            {
+                const query = new queries.Query("Departments");
+                query.add();
+                break;
+            }
 
-            case "Add a role": queries.addRole();
-            break;
+            case "Add a role": 
+            {
+                const query = new queries.Query("Roles");
+                query.add();
+                break;
+            }
 
-            case "Add an employee": queries.addEmployee();
-            break;
+            case "Add an employee": 
+            {
+                const query = new queries.Query("Employees");
+                query.add();
+                break;
+            }
 
-            case "Update employee role": queries.updateRole();
-            break;
-        }
-    }
-)
-}
+            case "Update an employee role":
+            {
+                const query = new queries.Query("Employees");
+                query.update();
+                break;
+            }    
+    }})
+    .catch(function (err) {
+    if (err) throw err;
+})}
 
 init();
 
