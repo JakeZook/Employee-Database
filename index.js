@@ -11,6 +11,14 @@ const openingQuestion = [
     }
 ]
 
+const closingQuestion = [
+    {
+        type: 'confirm',
+        message: 'Go back to menu?',
+        name: "close"
+    }
+]
+
 const init = () => {
     console.log
     (`-----------------------------------------------------
@@ -30,21 +38,21 @@ const askOpeningQuestion = () => {
             case "View all departments":
             {
                 const query = new queries.Query("Departments");
-                query.view();
+                query.view(askClosingQuestion);
                 break;
             }
 
             case "View all roles": 
             {
                 const query = new queries.Query("Roles");
-                query.view();
+                query.view(askClosingQuestion);
                 break;
             }
 
             case "View all employees": 
             {
                 const query = new queries.Query("Employees");
-                query.view();
+                query.view(askClosingQuestion);
                 break;
             }
 
@@ -80,6 +88,10 @@ const askOpeningQuestion = () => {
     if (err) throw err;
 })}
 
-init();
+const askClosingQuestion = () => {
+    inquirer.prompt(closingQuestion).then((res) => {
+        res.close === true ? init() : process.exit();
+    })
+}
 
-module.exports = askOpeningQuestion;
+init();

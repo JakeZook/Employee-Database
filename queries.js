@@ -1,6 +1,13 @@
-const inquirer = require('inquirer');
-const db = require('mysql2');
-const openingQuestion = require('./index');
+const mySQL = require('mysql2');
+
+const db = mySQL.createConnection(
+    {
+        host: 'localhost',
+        user: 'root',
+        password: 'root',
+        database: 'jz_employee_db'
+    },
+)
 
 class Query {
     constructor(selection)
@@ -8,8 +15,11 @@ class Query {
         this.selection = selection;
     }
 
-    view() {
-        console.log(`Viewing ${this.selection}`);
+    view(cb) {
+        db.query(`SELECT * FROM ${this.selection}`, function (err, results) {
+            console.table(results);
+            cb();
+        });
     }
 
     add() {
@@ -21,35 +31,4 @@ class Query {
     }
 }
 
-const viewDepartments = () => {
-    console.log("VD");
-}
-
-const viewRoles = () => {
-    console.log("VR");
-}
-
-const viewEmployees = () => {
-    console.log("VE");
-}
-
-const addDepartment = () => {
-    console.log("AD");
-}
-
-const addRole = () => {
-    console.log("AR");
-}
-
-const addEmployee = () => {
-    console.log("AE");
-}
-
-const updateRole = () => {
-    console.log("UR");
-}
-
-module.exports = {
-    viewDepartments, viewRoles, viewEmployees,
-    addDepartment, addRole, addEmployee, updateRole, Query
-};
+module.exports = {Query};
