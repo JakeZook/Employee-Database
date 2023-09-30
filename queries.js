@@ -28,7 +28,8 @@ class Query {
 
     viewRoles() {
         return new Promise((resolve, reject) => {
-            db.query(`SELECT Department_ID, Job_Title, Salary, Department FROM ROLES JOIN DEPARTMENTS ON Roles.Department_ID = Departments.ID`, 
+            db.query(`SELECT * FROM ROLES 
+            JOIN DEPARTMENTS ON Roles.Department_ID = Departments.ID`, 
             (err, res) => {
                 if (err) {
                     reject(err); // Reject the promise if there's an error
@@ -42,8 +43,15 @@ class Query {
     
     viewEmployees() {
         return new Promise((resolve, reject) => {
-            db.query("SELECT * FROM EMPLOYEES", (err, res) => {
-                err ? reject(err) : resolve();
+            db.query(`SELECT * FROM EMPLOYEES
+            JOIN ROLES ON Employees.Role_ID = Roles.ID`, 
+            (err, res) => {
+                if (err) {
+                    reject(err); // Reject the promise if there's an error
+                } else {
+                    console.table(res);
+                    resolve(); // Resolve the promise if the query is successful
+                }
             });
         });
     };
@@ -58,9 +66,9 @@ class Query {
                 }
             )
             .then((res) => {
-                console.log(res.departmentName);
                 const name = res.departmentName;
-                db.query(`INSERT INTO DEPARTMENTS (Department) VALUES ("${name}")`,
+                db.query(`INSERT INTO DEPARTMENTS (Department) 
+                VALUES ("${name}")`,
                 (err, res) => {
                     err ? reject(err) : resolve();
                 })
@@ -69,11 +77,131 @@ class Query {
     };
 
     addRole() {
+        return new Promise((resolve, reject) => {
+            const departmentList = [];
 
+            const roleQuestions = [
+                {
+                    type: 'input',
+                    message: 'What is the name of the role?',
+                    name: "roleName"
+                },
+                {
+                    type: 'list',
+                    message: 'Which department does this role belong to?',
+                    name: 'departmentName',
+                    choices: departmentList
+                },
+                {
+                    type: "input",
+                    message: "What is the salary for this role?",
+                    name: "salaryAmount"
+                }
+            ]
+
+            db.query(`SELECT * FROM DEPARTMENTS`, (err, res) => {
+                if (err) {
+                    reject(err); // Reject the promise if there's an error
+                } else {
+                    for (let i = 0; i < res.length; i++)
+                    {
+                        let department = res[i].Department;
+                        departmentList.push(department);
+                    }
+                }
+            });
+
+            inquirer.prompt(roleQuestions)
+            .then((res) => {
+                const roleName = res.roleName;
+                const departmentName = res.departmentName;
+                const salaryAmount = res.salaryAmount;
+
+                db.query(`INSERT INTO ROLES (Job_Title, Department_ID, Salary) 
+                VALUES ("${roleName}", 
+                (SELECT ID FROM DEPARTMENTS WHERE Department = "${departmentName}"), ${salaryAmount})`,
+                (err, res) => {
+                    err ? reject(err) : resolve();
+                })
+            });
+        });
     };
 
     addEmployee() {
+        return new Promise((resolve, reject) => {
+            const rolesList = [];
+            const managerList = [];
 
+            const employeeQuestions = [
+                {
+                    type: 'input',
+                    message: 'What is the first name of the employee?',
+                    name: "firstName"
+                },
+                {
+                    type: 'input',
+                    message: 'What is the last name of the employee?',
+                    name: "lastName"
+                },
+                {
+                    type: 'list',
+                    message: 'Which role does this employee have?',
+                    name: 'roleName',
+                    choices: rolesList
+                },
+                {
+                    type: 'list',
+                    message: 'Who is the manager for this employee?',
+                    name: 'managerName',
+                    choices: managerList
+                }
+            ]
+
+            db.query(`SELECT * FROM ROLES`, (err, res) => {
+                if (err) {
+                    reject(err); // Reject the promise if there's an error
+                } else {
+                    for (let i = 0; i < res.length; i++)
+                    {
+                        let role = res[i].Job_Title;
+                        rolesList.push(role);
+                    }
+                }
+            });
+            
+            db.query(`SELECT First_Name, Last_Name 
+            FROM EMPLOYEES WHERE ROLE_ID = 4 || ROLE_ID = 6`, (err, res) => {
+                if (err) {
+                    reject(err); // Reject the promise if there's an error
+                } else {
+                    for (let i = 0; i < res.length; i++)
+                    {
+                        let manager = `${res[i].First_Name} ${res[i].Last_Name}`;
+                        managerList.push(manager);
+                    }
+                }
+            });
+
+            inquirer.prompt(employeeQuestions)
+            .then((res) => {
+                const firstName = res.firstName;
+                const lastName = res.lastName;
+                const roleName = res.roleName;
+
+                const managerName = res.managerName.split(' ');
+                const managerFirstName = managerName[0];
+                const managerLastName = managerName[1];
+
+                db.query(`INSERT INTO EMPLOYEES (First_Name, Last_Name, Role_ID, Manager_ID) 
+                SELECT "${firstName}", "${lastName}", 
+                (SELECT ID FROM ROLES WHERE Job_Title = "${roleName}"),
+                (SELECT ID FROM (SELECT * FROM EMPLOYEES) AS e 
+                WHERE First_Name = "${managerFirstName}" AND Last_Name = "${managerLastName}")`,
+                (err, res) => {
+                    err ? reject(err) : resolve();
+                })
+            });
+        });
     };
 
     updateEmployeeRole() {

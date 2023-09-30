@@ -11,8 +11,8 @@ CREATE TABLE `Departments` (
 CREATE TABLE `Roles` (
     `ID` INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     `Job_Title` VARCHAR(30) NOT NULL,
-    `Department_ID` INT,
     `Salary` INT,
+    `Department_ID` INT,
     FOREIGN KEY (Department_ID)
     REFERENCES Departments(ID)
 );

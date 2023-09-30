@@ -38,7 +38,6 @@ const continueOptions = [
 ]
 
 async function handleResponse(res) {
-    console.log(res);
     const query = new Query();
     
     switch (res)
@@ -89,11 +88,23 @@ async function handleResponse(res) {
 
         case "Add a role": 
         {
+            try {
+                await query.addRole(); // Wait for addRole to finish
+                openMenu(); // Then call openMenu
+            } catch (err) {
+                console.error(err);
+            }
             break;
         }
 
         case "Add an employee": 
         {
+            try {
+                await query.addEmployee(); // Wait for addEmployee to finish
+                openMenu(); // Then call openMenu
+            } catch (err) {
+                console.error(err);
+            }
             break;
         }
 
