@@ -5,7 +5,7 @@ use jz_employee_db;
 
 CREATE TABLE `Departments` (
     `ID` INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    `Name` VARCHAR(30) NOT NULL 
+    `Department` VARCHAR(30) NOT NULL 
 );
 
 CREATE TABLE `Roles` (

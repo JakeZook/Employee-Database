@@ -1,97 +1,123 @@
 const inquirer = require('inquirer');
-const queries = require("./queries");
+const Query = require('./queries');
 
-const openingQuestion = [
+const init = () => {
+    console.log(`-----------------------------------------------------
+    --                                                 --
+    --                 Welcome to the                  --
+    --           Employee Management System            --
+    --                                                 --
+    -----------------------------------------------------`);
+    
+
+    inquirer.prompt(menuOptions)
+    .then((response) => {
+        handleResponse(response.options);
+    })
+    .catch((err) => {
+        if (err) throw err;
+    })
+}
+
+const menuOptions = [
     {
     type: 'list',
     message: 'What would you like to do?',
-    name: 'openingChoice',
+    name: 'options',
     choices: ["View all departments", "View all roles", "View all employees", "Add a department", 
-    "Add a role", "Add an employee", "Update an employee role"]
+    "Add a role", "Add an employee", "Update an employee role", "Exit"]
     }
 ]
 
-const closingQuestion = [
+const continueOptions = [
     {
         type: 'confirm',
         message: 'Go back to menu?',
-        name: "close"
+        name: 'close'
     }
 ]
 
-const init = () => {
-    console.log
-    (`-----------------------------------------------------
---                                                 --
---                 Welcome to the                  --
---           Employee Management System            --
---                                                 --
------------------------------------------------------`);
+async function handleResponse(res) {
+    console.log(res);
+    const query = new Query();
+    
+    switch (res)
+    {
+        case "View all departments":
+        {
+            try {
+                await query.viewDepartments(); // Wait for viewDepartments to finish
+                openMenu(); // Then call openMenu
+            } catch (err) {
+                console.error(err);
+            }
+            break;
+        }
+        
+        case "View all roles": 
+        {
+            try {
+                await query.viewRoles(); // Wait for viewRoles to finish
+                openMenu(); // Then call openMenu
+            } catch (err) {
+                console.error(err);
+            }
+            break;
+        }
 
-    askOpeningQuestion();
+        case "View all employees": 
+        {
+            try {
+                await query.viewEmployees(); // Wait for viewEmployees to finish
+                openMenu(); // Then call openMenu
+            } catch (err) {
+                console.error(err);
+            }
+            break;
+        }
+
+        case "Add a department": 
+        {
+            try {
+                await query.addDepartment(); // Wait for addDepartment to finish
+                openMenu(); // Then call openMenu
+            } catch (err) {
+                console.error(err);
+            }
+            break;
+        }
+
+        case "Add a role": 
+        {
+            break;
+        }
+
+        case "Add an employee": 
+        {
+            break;
+        }
+
+        case "Update an employee role":
+        {
+            break;
+        }
+
+        case "Exit":
+        {
+            query.quit();
+            break;
+        }
+    }
 }
 
-const askOpeningQuestion = () => {
-    inquirer.prompt(openingQuestion).then((res) => {
-        switch (res.openingChoice)
-        {
-            case "View all departments":
-            {
-                const query = new queries.Query("Departments");
-                query.view(askClosingQuestion);
-                break;
-            }
-
-            case "View all roles": 
-            {
-                const query = new queries.Query("Roles");
-                query.view(askClosingQuestion);
-                break;
-            }
-
-            case "View all employees": 
-            {
-                const query = new queries.Query("Employees");
-                query.view(askClosingQuestion);
-                break;
-            }
-
-            case "Add a department": 
-            {
-                const query = new queries.Query("Departments");
-                query.add();
-                break;
-            }
-
-            case "Add a role": 
-            {
-                const query = new queries.Query("Roles");
-                query.add();
-                break;
-            }
-
-            case "Add an employee": 
-            {
-                const query = new queries.Query("Employees");
-                query.add();
-                break;
-            }
-
-            case "Update an employee role":
-            {
-                const query = new queries.Query("Employees");
-                query.update();
-                break;
-            }    
-    }})
-    .catch(function (err) {
-    if (err) throw err;
-})}
-
-const askClosingQuestion = () => {
-    inquirer.prompt(closingQuestion).then((res) => {
-        res.close === true ? init() : process.exit();
-    })
+async function openMenu() {
+    try {
+        const quit = new Query();
+        const response = await inquirer.prompt(continueOptions);
+        response.close ? init() : quit.quit();
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 init();
