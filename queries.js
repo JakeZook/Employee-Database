@@ -28,8 +28,10 @@ class Query {
 
     viewRoles() {
         return new Promise((resolve, reject) => {
-            db.query(`SELECT * FROM ROLES 
-            JOIN DEPARTMENTS ON Roles.Department_ID = Departments.ID`, 
+            db.query(`SELECT R.ID, R.Job_Title, R.Salary, D.Department
+            FROM Roles AS R
+            JOIN Departments AS D ON R.Department_ID = D.ID
+            ORDER BY R.ID;`, 
             (err, res) => {
                 if (err) {
                     reject(err); // Reject the promise if there's an error
@@ -43,8 +45,11 @@ class Query {
     
     viewEmployees() {
         return new Promise((resolve, reject) => {
-            db.query(`SELECT * FROM EMPLOYEES
-            JOIN ROLES ON Employees.Role_ID = Roles.ID`, 
+            db.query(`SELECT E.ID, E.Manager_ID, E.First_Name, E.Last_Name, R.Job_Title, D.Department
+            FROM Employees AS E
+            JOIN Roles AS R ON E.Role_ID = R.ID
+            JOIN Departments AS D ON E.Department_ID = D.ID
+            ORDER BY E.ID;`, 
             (err, res) => {
                 if (err) {
                     reject(err); // Reject the promise if there's an error

@@ -13,16 +13,16 @@ VALUES ("Inside Sales Representative", 1, 50000),
         ("Office Manager", 4, 70000),
         ("Finance Associate", 2, 50000);
 
-INSERT INTO Employees (First_Name, Last_Name, Role_ID, Manager_ID)
-Values ("John", "Doe", 4, NULL),
-        ("Justin", "Scott", 1, 1),
-        ("Xander", "Nelson", 2, 1),
-        ("Raegan", "Berry", 2, 1),
-        ("Jane", "Doe", 6, NULL),
-        ("Carson", "Bennet", 3, 2),
-        ("Paul", "Klein", 7, 2),
-        ("Hudson", "Davis", 5, 2),
-        ("Caroline", "Waters", 1, 1);
+INSERT INTO Employees (First_Name, Last_Name, Role_ID, Department_ID, Manager_ID)
+Values ("John", "Doe", 4, 4, NULL),
+        ("Justin", "Scott", 1, 1, 1),
+        ("Xander", "Nelson", 2, 1, 1),
+        ("Raegan", "Berry", 2, 1, 1),
+        ("Jane", "Doe", 6, 4, NULL),
+        ("Carson", "Bennet", 3, 2, 2),
+        ("Paul", "Klein", 7, 2, 2),
+        ("Hudson", "Davis", 5, 3, 2),
+        ("Caroline", "Waters", 1, 1, 1);
 
 use jz_employee_db;
 
