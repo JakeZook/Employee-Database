@@ -23,7 +23,7 @@ CREATE TABLE `Employees` (
     `Last_Name` VARCHAR(30)  NOT NULL,
     `Role_ID` INT NOT NULL,
     `Department_ID` INT NOT NULL,
-    `Manager_ID` INT, 
+    `Manager_Name` VARCHAR(30), 
     FOREIGN KEY (Role_ID)
     REFERENCES Roles(ID),
     FOREIGN KEY (Department_ID)
