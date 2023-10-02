@@ -387,6 +387,41 @@ class Query {
         });
     };      
     
+    getBudget() {
+        return new Promise((resolve, reject) => {
+            let total = 0;
+            const departmentList = [];
+
+            const budgetQuestion = {
+                type: 'list',
+                message: 'Which department budget would you like to view?',
+                name: 'departmentName',
+                choices: departmentList
+            }
+
+            db.query(`SELECT Department FROM DEPARTMENTS`, (err, res) => {
+                for (let i = 0; i < res.length; i ++)
+                {
+                    let department = res[i].Department;
+                    departmentList.push(department);
+                }
+
+                inquirer.prompt(budgetQuestion)
+                .then((res) => {
+                    const departmentName = res.departmentName;
+
+                    db.query(`SELECT SUM(r.Salary) AS Total
+                    FROM Departments d
+                    JOIN Roles r ON d.ID = r.Department_ID
+                    JOIN Employees e ON r.ID = e.Role_ID
+                    WHERE d.Department = "${departmentName}"`, (err, res) => {
+                        console.log(`Total budget: $${res[0].Total}`);
+                        resolve();
+                    });
+                });
+            });
+        });
+    };
 
     quit() {
         console.log("Goodbye!");

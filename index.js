@@ -27,8 +27,8 @@ const menuOptions = [
     message: 'What would you like to do?',
     name: 'options',
     choices: ["View all departments", "View all roles", "View all employees", "Add a department", 
-    "Add a role", "Add an employee", "Update an employee role", "Delete Department", "Delete Role",
-    "Delete Employee", "Exit"]
+    "Add a role", "Add an employee", "Update an employee role", "Delete department", "Delete role",
+    "Delete employee", "View department budget", "Exit"]
     }
 ];
 
@@ -122,7 +122,7 @@ async function handleResponse(res) {
             break;
         }
 
-        case "Delete Department":
+        case "Delete department":
         {
             try {
                 await query.deleteDepartment();
@@ -133,7 +133,7 @@ async function handleResponse(res) {
             break;
         }
         
-        case "Delete Role":
+        case "Delete role":
         {
             try {
                 await query.deleteRole();
@@ -144,10 +144,21 @@ async function handleResponse(res) {
             break;
         }
         
-        case "Delete Employee":
+        case "Delete employee":
         {
             try {
                 await query.deleteEmployee();
+                openMenu(); // Then call openMenu
+            } catch (err) {
+                console.error(err);
+            }
+            break;
+        }
+        
+        case "View department budget":
+        {
+            try {
+                await query.getBudget();
                 openMenu(); // Then call openMenu
             } catch (err) {
                 console.error(err);
