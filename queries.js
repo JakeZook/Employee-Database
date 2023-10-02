@@ -102,7 +102,7 @@ class Query {
                     message: "What is the salary for this role?",
                     name: "salaryAmount"
                 }
-            ]
+            ];
 
             db.query(`SELECT * FROM DEPARTMENTS`, (err, res) => {
                 if (err) {
@@ -160,7 +160,7 @@ class Query {
                     name: 'managerName',
                     choices: managerList
                 }
-            ]
+            ];
 
             db.query(`SELECT * FROM ROLES`, (err, res) => {
                 if (err) {
@@ -195,10 +195,6 @@ class Query {
                 const roleName = res.roleName;
                 const managerName = res.managerName;
 
-                // const managerName = res.managerName.split(' ');
-                // const managerFirstName = managerName[0];
-                // const managerLastName = managerName[1];
-
                 db.query(`INSERT INTO EMPLOYEES (First_Name, Last_Name, Role_ID, Department_ID, Manager_Name) 
                 SELECT "${firstName}", "${lastName}", 
                 (SELECT ID FROM ROLES WHERE Job_Title = "${roleName}"), 
@@ -212,7 +208,88 @@ class Query {
     };
 
     updateEmployeeRole() {
+        return new Promise((resolve, reject) => {
+            const rolesList = [];
+            const employeeList = [];
+    
+            const updateRoleQuestions = [
+                {
+                    type: 'list',
+                    message: 'Who is the employee you would like to update?',
+                    name: 'employeeName',
+                    choices: employeeList
+                },
+                {
+                    type: 'list',
+                    message: 'What is their new role?',
+                    name: 'updatedRoleName',
+                    choices: rolesList
+                }
+            ];
+    
+            // Use Promise.all to wait for both database queries to complete
+            Promise.all([
+                new Promise((resolve, reject) => {
+                    db.query(`SELECT * FROM ROLES`, (err, res) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            for (let i = 0; i < res.length; i++) {
+                                let role = res[i].Job_Title;
+                                rolesList.push(role);
+                            }
+                            resolve();
+                        }
+                    });
+                }),
+                new Promise((resolve, reject) => {
+                    db.query(`SELECT First_Name, Last_Name FROM EMPLOYEES`, (err, res) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            for (let i = 0; i < res.length; i++) {
+                                let employee = `${res[i].First_Name} ${res[i].Last_Name}`;
+                                employeeList.push(employee);
+                            }
+                            resolve();
+                        }
+                    });
+                })
+            ])
+            .then(() => {
+                inquirer.prompt(updateRoleQuestions)
+                    .then((res) => {
+                        const roleName = res.updatedRoleName;
+                        let roleID = null;
+                        let deptID = null;
+                        const employeeName = res.employeeName.split(' ');
+                        const employeeFirstName = employeeName[0];
+                        const employeeLastName = employeeName[1];
+    
+                        db.query(`SELECT ID FROM ROLES WHERE Job_Title = "${roleName}"`, (err, res) => {
+                            roleID = res[0].ID;
 
+                            db.query(`SELECT Department_ID FROM ROLES WHERE ID = ${roleID}`, (err, res) => {
+                                deptID = res[0].Department_ID;
+                                
+                                db.query(
+                                    `UPDATE EMPLOYEES SET Role_ID = ${roleID}, Department_ID = ${deptID} 
+                                    WHERE First_Name = "${employeeFirstName}" AND Last_Name = "${employeeLastName}"`,
+                                    (err, updateResult) => {
+                                        if (err) {
+                                            reject(err);
+                                        } else {
+                                            resolve();
+                                        }
+                                    });
+                                });
+                            });
+                        });
+                    })
+                .catch((err) => {
+                reject(err);
+            });
+        });
     };
 
     quit() {

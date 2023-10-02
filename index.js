@@ -1,4 +1,4 @@
-//TODO - Add update role, Delete functions
+//TODO - Delete functions
 
 const inquirer = require('inquirer');
 const Query = require('./queries');
@@ -112,6 +112,12 @@ async function handleResponse(res) {
 
         case "Update an employee role":
         {
+            try {
+                await query.updateEmployeeRole(); // Wait for updateEmployeeRole to finish
+                openMenu(); // Then call openMenu
+            } catch (err) {
+                console.error(err);
+            }
             break;
         }
 
