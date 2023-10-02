@@ -390,7 +390,7 @@ class Query {
     getBudget() {
         return new Promise((resolve, reject) => {
             let total = 0;
-            const departmentList = [];
+            const departmentList = ["All departments"];
 
             const budgetQuestion = {
                 type: 'list',
@@ -410,14 +410,25 @@ class Query {
                 .then((res) => {
                     const departmentName = res.departmentName;
 
-                    db.query(`SELECT SUM(r.Salary) AS Total
-                    FROM Departments d
-                    JOIN Roles r ON d.ID = r.Department_ID
-                    JOIN Employees e ON r.ID = e.Role_ID
-                    WHERE d.Department = "${departmentName}"`, (err, res) => {
-                        console.log(`Total budget: $${res[0].Total}`);
-                        resolve();
-                    });
+                    if (departmentName == "All departments") {
+                        db.query(`SELECT SUM(r.Salary) AS Total
+                        FROM Roles r
+                        JOIN Employees e ON r.ID = e.Role_ID`, (err, res) => {
+                            console.log(`Total budget: $${res[0].Total}`);
+                            resolve();
+                        })
+                    }
+
+                    else {
+                        db.query(`SELECT SUM(r.Salary) AS Total
+                        FROM Departments d
+                        JOIN Roles r ON d.ID = r.Department_ID
+                        JOIN Employees e ON r.ID = e.Role_ID
+                        WHERE d.Department = "${departmentName}"`, (err, res) => {
+                            console.log(`Total budget: $${res[0].Total}`);
+                            resolve();
+                        });
+                    }
                 });
             });
         });
