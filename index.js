@@ -36,12 +36,13 @@ const continueOptions = [
     {
         type: 'confirm',
         message: 'Go back to menu?',
-        name: 'close'
+        name: 'menu'
     }
 ];
 
 async function handleResponse(res) {
     const query = new Query();
+    console.clear();
     
     switch (res)
     {
@@ -178,7 +179,8 @@ async function openMenu() {
     try {
         const quit = new Query();
         const response = await inquirer.prompt(continueOptions);
-        response.close ? init() : quit.quit();
+        console.clear();
+        response.menu ? init() : quit.quit();
     } catch (err) {
         console.error(err);
     }

@@ -76,7 +76,7 @@ class Query {
                 db.query(`INSERT INTO DEPARTMENTS (Department) 
                 VALUES ("${name}")`,
                 (err, res) => {
-                    err ? reject(err) : resolve();
+                    err ? reject(err) : console.log("ADDED!"); resolve();
                 })
             });
         });
@@ -127,7 +127,7 @@ class Query {
                 VALUES ("${roleName}", 
                 (SELECT ID FROM DEPARTMENTS WHERE Department = "${departmentName}"), ${salaryAmount})`,
                 (err, res) => {
-                    err ? reject(err) : resolve();
+                    err ? reject(err) : console.log("ADDED!"); resolve();
                 })
             });
         });
@@ -202,7 +202,7 @@ class Query {
                 (SELECT ID FROM DEPARTMENTS WHERE ID = (SELECT Department_ID FROM ROLES WHERE Job_Title = "${roleName}")),
                 "${managerName}"`,
                 (err, res) => {
-                    err ? reject(err) : resolve();
+                    err ? reject(err) : console.log("ADDED!"); resolve();
                 })
             });
         });
@@ -280,6 +280,7 @@ class Query {
                                         if (err) {
                                             reject(err);
                                         } else {
+                                            console.log("UPDATED!");
                                             resolve();
                                         }
                                     });
@@ -316,7 +317,7 @@ class Query {
                     const departmentName = answers.departmentName;
 
                     db.query(`DELETE FROM DEPARTMENTS WHERE Department = '${departmentName}'`, (err, result) => {
-                        err ? reject(err) : resolve();
+                        err ? reject(err) : console.log("DELETED!"); resolve();
                     });
                 });     
             });
@@ -346,7 +347,7 @@ class Query {
                     const roleName = answers.roleName;
 
                     db.query(`DELETE FROM ROLES WHERE Job_Title = '${roleName}'`, (err, result) => {
-                        err ? reject(err) : resolve();
+                        err ? reject(err) : console.log("DELETED!"); resolve();
                     });
                 });     
             });
@@ -380,7 +381,7 @@ class Query {
                     db.query(`DELETE FROM EMPLOYEES
                     WHERE First_Name = "${employeeFirstName}" AND Last_Name = "${employeeLastName}"`, 
                     (err, result) => {
-                        err ? reject(err) : resolve();
+                        err ? reject(err) : console.log("DELETED!"); resolve();
                     });
                 });     
             });
