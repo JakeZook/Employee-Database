@@ -45,7 +45,8 @@ class Query {
     
     viewEmployees() {
         return new Promise((resolve, reject) => {
-            db.query(`SELECT E.ID, E.First_Name, E.Last_Name, R.Job_Title, D.Department, E.Manager_Name
+            db.query(`SELECT E.ID, E.First_Name, E.Last_Name, R.Salary, R.Job_Title, 
+            D.Department, E.Manager_Name
             FROM Employees AS E
             JOIN Roles AS R ON E.Role_ID = R.ID
             JOIN Departments AS D ON E.Department_ID = D.ID
