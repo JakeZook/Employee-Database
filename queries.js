@@ -135,7 +135,7 @@ class Query {
     addEmployee() {
         return new Promise((resolve, reject) => {
             const rolesList = [];
-            const managerList = [];
+            const managerList = ["None"];
 
             const employeeQuestions = [
                 {
@@ -176,7 +176,7 @@ class Query {
 
             
             db.query(`SELECT First_Name, Last_Name 
-            FROM EMPLOYEES WHERE ROLE_ID = 4 || ROLE_ID = 6`, (err, res) => {
+            FROM EMPLOYEES WHERE Department_ID = 4`, (err, res) => {
                 if (err) {
                     reject(err); // Reject the promise if there's an error
                 } else {

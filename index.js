@@ -1,3 +1,5 @@
+//TODO - Add update role, Delete functions
+
 const inquirer = require('inquirer');
 const Query = require('./queries');
 
