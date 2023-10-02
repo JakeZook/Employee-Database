@@ -1,8 +1,7 @@
-//TODO - Delete functions
-
 const inquirer = require('inquirer');
 const Query = require('./queries');
 
+//Renders menu text and prompts user for input
 const init = () => {
     console.log(`-----------------------------------------------------
     --                                                 --
@@ -21,6 +20,7 @@ const init = () => {
     })
 }
 
+//Options to select in menu
 const menuOptions = [
     {
     type: 'list',
@@ -32,6 +32,7 @@ const menuOptions = [
     }
 ];
 
+//Inquirer prompt to go back to menu
 const continueOptions = [
     {
         type: 'confirm',
@@ -40,10 +41,14 @@ const continueOptions = [
     }
 ];
 
+//Calls corresponding function relative to user input
 async function handleResponse(res) {
+    //Creates a new query object
     const query = new Query();
+    //Clears console to avoid clutter
     console.clear();
     
+    //Finds and calls corresponding function
     switch (res)
     {
         case "View all departments":
@@ -126,7 +131,7 @@ async function handleResponse(res) {
         case "Delete department":
         {
             try {
-                await query.deleteDepartment();
+                await query.deleteDepartment(); // Wait for deleteDepartment to finish
                 openMenu(); // Then call openMenu
             } catch (err) {
                 console.error(err);
@@ -137,7 +142,7 @@ async function handleResponse(res) {
         case "Delete role":
         {
             try {
-                await query.deleteRole();
+                await query.deleteRole(); // Wait for deleteRole to finish
                 openMenu(); // Then call openMenu
             } catch (err) {
                 console.error(err);
@@ -148,7 +153,7 @@ async function handleResponse(res) {
         case "Delete employee":
         {
             try {
-                await query.deleteEmployee();
+                await query.deleteEmployee(); // Wait for deleteEmployee to finish
                 openMenu(); // Then call openMenu
             } catch (err) {
                 console.error(err);
@@ -159,7 +164,7 @@ async function handleResponse(res) {
         case "View department budget":
         {
             try {
-                await query.getBudget();
+                await query.getBudget(); // Wait for getBudget to finish
                 openMenu(); // Then call openMenu
             } catch (err) {
                 console.error(err);
@@ -167,7 +172,7 @@ async function handleResponse(res) {
             break;
         }
 
-        case "Exit":
+        case "Exit": //Exits program
         {
             query.quit();
             break;
@@ -175,15 +180,21 @@ async function handleResponse(res) {
     }
 }
 
+//Prompts user to go back to menu or exit program
 async function openMenu() {
     try {
+        //Creates new query object
         const quit = new Query();
         const response = await inquirer.prompt(continueOptions);
+
+        //Clears console to avoid clutter
         console.clear();
+        //If true, return to menu. If false, exit
         response.menu ? init() : quit.quit();
     } catch (err) {
         console.error(err);
     }
 }
 
+//Initial function call
 init();
