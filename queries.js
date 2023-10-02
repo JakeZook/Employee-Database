@@ -49,10 +49,8 @@ class Query {
             JOIN Departments AS D ON E.Department_ID = D.ID
             ORDER BY E.ID;`, 
             (err, res) => {
-                if (err) {
                 //Reject if error, resolve is no error
-                    err ? reject(err) : console.table(res); resolve();
-                }
+                err ? reject(err) : console.table(res); resolve();
             });
         });
     };

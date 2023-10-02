@@ -3,12 +3,15 @@ const Query = require('./queries');
 
 //Renders menu text and prompts user for input
 const init = () => {
-    console.log(`-----------------------------------------------------
+    console.log(`
+    -----------------------------------------------------
     --                                                 --
     --                 Welcome to the                  --
     --           Employee Management System            --
     --                                                 --
-    -----------------------------------------------------`);
+    -----------------------------------------------------
+    
+    `);
     
 
     inquirer.prompt(menuOptions)
