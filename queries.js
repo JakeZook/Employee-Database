@@ -293,6 +293,101 @@ class Query {
         });
     };
 
+    deleteDepartment() {
+        return new Promise((resolve, reject) => {
+            const departmentList = [];
+    
+            const deleteQuestion = {
+                type: 'list',
+                message: 'Which department would you like to delete?',
+                name: 'departmentName',
+                choices: departmentList
+            };
+    
+            db.query(`SELECT * FROM DEPARTMENTS`, (err, res) => {
+                for (let i = 0; i < res.length; i++) 
+                {
+                    let department = res[i].Department;
+                    departmentList.push(department);
+                }
+    
+                inquirer.prompt(deleteQuestion)
+                .then((answers) => {
+                    const departmentName = answers.departmentName;
+
+                    db.query(`DELETE FROM DEPARTMENTS WHERE Department = '${departmentName}'`, (err, result) => {
+                        err ? reject(err) : resolve();
+                    });
+                });     
+            });
+        });
+    };                   
+    
+    deleteRole() {
+        return new Promise((resolve, reject) => {
+            const roleList = [];
+    
+            const deleteQuestion = {
+                type: 'list',
+                message: 'Which role would you like to delete?',
+                name: 'roleName',
+                choices: roleList
+            };
+    
+            db.query(`SELECT * FROM ROLES`, (err, res) => {
+                for (let i = 0; i < res.length; i++) 
+                {
+                    let role = res[i].Job_Title;
+                    roleList.push(role);
+                }
+    
+                inquirer.prompt(deleteQuestion)
+                .then((answers) => {
+                    const roleName = answers.roleName;
+
+                    db.query(`DELETE FROM ROLES WHERE Job_Title = '${roleName}'`, (err, result) => {
+                        err ? reject(err) : resolve();
+                    });
+                });     
+            });
+        });
+    };      
+    
+    deleteEmployee() {
+        return new Promise((resolve, reject) => {
+            const employeeList = [];
+    
+            const deleteQuestion = {
+                type: 'list',
+                message: 'Which employee would you like to delete?',
+                name: 'employeeName',
+                choices: employeeList
+            };
+    
+            db.query(`SELECT First_Name, Last_Name FROM EMPLOYEES`, (err, res) => {
+                for (let i = 0; i < res.length; i++) 
+                {
+                    let employee = `${res[i].First_Name} ${res[i].Last_Name}`;
+                    employeeList.push(employee);
+                }
+    
+                inquirer.prompt(deleteQuestion)
+                .then((answers) => {
+                    const employeeName = answers.employeeName.split(' ');
+                    const employeeFirstName = employeeName[0];
+                    const employeeLastName = employeeName[1];
+
+                    db.query(`DELETE FROM EMPLOYEES
+                    WHERE First_Name = "${employeeFirstName}" AND Last_Name = "${employeeLastName}"`, 
+                    (err, result) => {
+                        err ? reject(err) : resolve();
+                    });
+                });     
+            });
+        });
+    };      
+    
+
     quit() {
         console.log("Goodbye!");
         db.end();

@@ -27,9 +27,10 @@ const menuOptions = [
     message: 'What would you like to do?',
     name: 'options',
     choices: ["View all departments", "View all roles", "View all employees", "Add a department", 
-    "Add a role", "Add an employee", "Update an employee role", "Exit"]
+    "Add a role", "Add an employee", "Update an employee role", "Delete Department", "Delete Role",
+    "Delete Employee", "Exit"]
     }
-]
+];
 
 const continueOptions = [
     {
@@ -37,7 +38,7 @@ const continueOptions = [
         message: 'Go back to menu?',
         name: 'close'
     }
-]
+];
 
 async function handleResponse(res) {
     const query = new Query();
@@ -114,6 +115,39 @@ async function handleResponse(res) {
         {
             try {
                 await query.updateEmployeeRole(); // Wait for updateEmployeeRole to finish
+                openMenu(); // Then call openMenu
+            } catch (err) {
+                console.error(err);
+            }
+            break;
+        }
+
+        case "Delete Department":
+        {
+            try {
+                await query.deleteDepartment();
+                openMenu(); // Then call openMenu
+            } catch (err) {
+                console.error(err);
+            }
+            break;
+        }
+        
+        case "Delete Role":
+        {
+            try {
+                await query.deleteRole();
+                openMenu(); // Then call openMenu
+            } catch (err) {
+                console.error(err);
+            }
+            break;
+        }
+        
+        case "Delete Employee":
+        {
+            try {
+                await query.deleteEmployee();
                 openMenu(); // Then call openMenu
             } catch (err) {
                 console.error(err);
